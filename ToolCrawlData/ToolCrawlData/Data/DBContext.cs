@@ -65,6 +65,10 @@ namespace ToolCrawlData.Data
             {
                 sql = sql + " and LicenseNumber LIKE '%" + data.LicenseNumber + "%'";
             }
+            if (!string.IsNullOrEmpty(data.ZipCode))
+            {
+                sql = sql + " and ZipCode LIKE '%" + data.ZipCode + "%'";
+            }
             SQLiteDataAdapter da = new SQLiteDataAdapter(sql, this._con);
             da.Fill(ds);
             this.closeConnection();

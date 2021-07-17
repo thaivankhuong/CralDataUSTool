@@ -1,27 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Data;
-using System.Diagnostics;
 using System.Drawing;
-using System.IO;
 using System.Linq;
-using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
-using System.Text.RegularExpressions;
-using System.Threading;
+using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
-using ExcelDataReader;
-using Microsoft.CSharp.RuntimeBinder;
+using ToolCrawlData.Data;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium.Remote;
 using OpenQA.Selenium.Support.UI;
+using System.IO;
+using ExcelDataReader;
+using System.Threading;
+using System.Text.RegularExpressions;
+using System.Collections.ObjectModel;
 using ToolCrawlData.Common;
-using ToolCrawlData.Data;
-
+using System.Diagnostics;
+using System.Reflection;
+using Microsoft.Office.Interop.Excel;
+using System.Runtime.InteropServices;
 
 namespace ToolCrawlData
 {
@@ -47,12 +47,19 @@ namespace ToolCrawlData
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            this.db.createTable();
+            this.txtusername.Text = "18955858";
             this.txtpassword.PasswordChar = '*';
             this.comboBox1.Items.Add(_Dallas);
             this.comboBox1.Items.Add(_Denton);
         }
 
-        private void btnBrower_Click(object sender, EventArgs e)
+        private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnbrower_Click(object sender, EventArgs e)
         {
             try
             {
@@ -75,7 +82,7 @@ namespace ToolCrawlData
                         });
                         ExcelDataSetConfiguration conf = excelDataSetConfiguration;
                         DataSet dataSet = reader.AsDataSet(conf);
-                        DataTable dataTable = dataSet.Tables[0];
+                        System.Data.DataTable dataTable = dataSet.Tables[0];
                         this.dataGridView1.Rows.Clear();
                         for (int i = 0; i < dataTable.Rows.Count; i++)
                         {
@@ -107,6 +114,7 @@ namespace ToolCrawlData
                             }
                         }
                     }
+                    lbltotalon.Text = listAddress.Count.ToString();
                 }
             }
             catch (Exception exx)
@@ -115,8 +123,10 @@ namespace ToolCrawlData
             }
         }
 
-        private void btnGetOwnerName_Click(object sender, EventArgs e)
+        private void btngetdataowner_Click(object sender, EventArgs e)
         {
+            btnGetOwnerName.Text = "Get Owner Name...";
+            btnGetOwnerName.Enabled = false;
             if (this.comboBox1.SelectedItem.ToString() == _Denton)
             {
                 this.SearchAllAddressDeton();
@@ -130,6 +140,7 @@ namespace ToolCrawlData
         #region Denton
         public void SearchAllAddressDeton()
         {
+
             bool flag = this.listAddress.Any<string>();
             if (flag)
             {
@@ -150,10 +161,7 @@ namespace ToolCrawlData
                         _listAddress.AddRange(books);
                         Thread t = new Thread(delegate ()
                         {
-                            for (int j = 0; j < books.Count<string>(); j++)
-                            {
-                                this.SearchDataDeton(books[j]);
-                            }
+                            this.SearchDataDeton(books.ToList());
                         });
                         t.Start();
                         t.IsBackground = true;
@@ -167,10 +175,7 @@ namespace ToolCrawlData
                                                  select s).ToList<string>();
                     Thread t2 = new Thread(delegate ()
                     {
-                        for (int j = 0; j < listserchnew.Count<string>(); j++)
-                        {
-                            this.SearchDataDeton(listserchnew[j]);
-                        }
+                        this.SearchDataDeton(listserchnew.ToList());
                     });
                     t2.Start();
                     t2.IsBackground = true;
@@ -178,20 +183,14 @@ namespace ToolCrawlData
             }
         }
 
-        public void SearchDataDeton(string address)
+        public void SearchDataDeton(List<string> lstaddress)
         {
-            Stopwatch watch = Stopwatch.StartNew();
-            address = address.Trim();
+           
             IWebDriver firefoxDriver = this.FirefoxDriverHide();
-            try
+            foreach (var item in lstaddress)
             {
-                bool flag = string.IsNullOrEmpty(address);
-                if (flag)
-                {
-                    MessageBox.Show("Địa chỉ không được bỏ trống");
-                    string result = "Update " + address + "false";
-                }
-                else
+                string address = item;
+                try
                 {
                     firefoxDriver.Url = "https://propaccess.trueautomation.com/clientdb/?cid=19";
                     firefoxDriver.Navigate();
@@ -249,21 +248,19 @@ namespace ToolCrawlData
                             string result = address + " Khong tim thay du lieu";
                         }
                     }
-                    watch.Stop();
-                    long elapsedMs = watch.ElapsedMilliseconds;
+                }
+                catch (Exception exx)
+                {
+
+                    string result = address + " Khong tim thay du lieu";
+                    this.setdelegateUpdateValueDataGridView(address, false, "Not found Data");
                     firefoxDriver.Quit();
                     this.FinishProcess(firefoxDriver);
                 }
             }
-            catch (Exception exx)
-            {
-                watch.Stop();
-                long elapsedMs2 = watch.ElapsedMilliseconds;
-                string result = address + " Khong tim thay du lieu";
-                this.setdelegateUpdateValueDataGridView(address, false, "Not found Data");
-                firefoxDriver.Quit();
-                this.FinishProcess(firefoxDriver);
-            }
+            
+            firefoxDriver.Quit();
+            this.FinishProcess(firefoxDriver);
         }
 
         private delegate void SetDataGridViewCallback(string address, bool isCrawlData, string resultData);
@@ -299,16 +296,38 @@ namespace ToolCrawlData
                 {
                     if (isCrawlData)
                     {
-                        bool flag2 = resultData.Contains(",");
-                        if (flag2)
+                        if (comboBox1.SelectedItem.ToString() == _Denton)
+                        {
+                            bool flag3 = resultData.Contains(",");
+                            if (flag3)
+                            {
+                                row.DefaultCellStyle.BackColor = Color.Green;
+                                row.Cells[1].Value = resultData;
+                                row.Cells[2].Value = "True";
+                                Tuple<string, string, string> result = this.GetFirstNameAndLastnameByFullName(resultData);
+                                row.Cells[3].Value = result.Item1;
+                                row.Cells[4].Value = result.Item2;
+                                row.Cells[5].Value = result.Item3;
+                                this.db.insertDAta(new SearchData
+                                {
+                                    Address = Convert.ToString(row.Cells["Address"].Value),
+                                    FullName = Convert.ToString(row.Cells["OwnerName"].Value),
+                                    FirstName = Convert.ToString(row.Cells["FirstName"].Value),
+                                    MiddleName = Convert.ToString(row.Cells["MiddleName"].Value),
+                                    LastName = Convert.ToString(row.Cells["LastName"].Value)
+                                });
+                                lblsuccesson.Text = Convert.ToString( Convert.ToInt32(lblsuccesson.Text) + 1);
+                            }
+                        }
+                        else if(comboBox1.SelectedItem.ToString() == _Dallas)
                         {
                             row.DefaultCellStyle.BackColor = Color.Green;
                             row.Cells[1].Value = resultData;
                             row.Cells[2].Value = "True";
-                            Tuple<string, string, string> result = this.GetFirstNameAndLastnameByFullName(resultData);
-                            row.Cells[3].Value = result.Item1;
-                            row.Cells[4].Value = result.Item2;
-                            row.Cells[5].Value = result.Item3;
+                            Tuple<string, string, string> result2 = this.GetFirstNameAndLastnameByFullNameDallas(resultData);
+                            row.Cells[3].Value = result2.Item3;
+                            row.Cells[4].Value = result2.Item2;
+                            row.Cells[5].Value = result2.Item1;
                             this.db.insertDAta(new SearchData
                             {
                                 Address = Convert.ToString(row.Cells["Address"].Value),
@@ -317,12 +336,7 @@ namespace ToolCrawlData
                                 MiddleName = Convert.ToString(row.Cells["MiddleName"].Value),
                                 LastName = Convert.ToString(row.Cells["LastName"].Value)
                             });
-                        }
-                        else
-                        {
-                            row.DefaultCellStyle.BackColor = Color.Red;
-                            row.Cells[1].Value = resultData;
-                            row.Cells[2].Value = "False";
+                            lblsuccesson.Text = Convert.ToString(Convert.ToInt32(lblsuccesson.Text) + 1);
                         }
                     }
                     else
@@ -330,22 +344,52 @@ namespace ToolCrawlData
                         row.DefaultCellStyle.BackColor = Color.Red;
                         row.Cells[1].Value = resultData;
                         row.Cells[2].Value = "False";
+                        lblfailon.Text = Convert.ToString(Convert.ToInt32(lblfailon.Text) + 1);
+
                     }
                 }
                 IEnumerable<DataGridViewRow> enumerable = from DataGridViewRow r in this.dataGridView1.Rows
                                                           where Convert.ToString(r.Cells["Status"].Value).Equals("True") || Convert.ToString(r.Cells["Status"].Value).Equals("False")
                                                           select r;
                 List<DataGridViewRow> rows = (enumerable != null) ? enumerable.ToList<DataGridViewRow>() : null;
-                bool flag3 = rows.Any<DataGridViewRow>() && rows.Count == this.listAddress.Count;
-                if (flag3)
+                bool flag5 = rows.Any<DataGridViewRow>() && rows.Count == this.listAddress.Count;
+                if (flag5)
                 {
                     MessageBox.Show("Completed " + DateTime.Now);
                 }
             }
             catch (Exception exx)
             {
-
             }
+        }
+
+        public Tuple<string, string, string> GetFirstNameAndLastnameByFullNameDallas(string fullName)
+        {
+            List<string> arrstring = (from s in fullName.Split(new char[]
+            {
+                ' '
+            })
+                                      where !string.IsNullOrEmpty(s)
+                                      select s).ToList<string>();
+            bool flag = arrstring.Any<string>();
+            Tuple<string, string, string> result;
+            if (flag)
+            {
+                bool flag2 = arrstring.Count > 1;
+                if (flag2)
+                {
+                    result = new Tuple<string, string, string>(arrstring[0].Trim(), "", arrstring[1]);
+                }
+                else
+                {
+                    result = new Tuple<string, string, string>(arrstring[0].Trim(), "", "");
+                }
+            }
+            else
+            {
+                result = new Tuple<string, string, string>("", "", "");
+            }
+            return result;
         }
 
         public Tuple<string, string, string> GetFirstNameAndLastnameByFullName(string fullName)
@@ -399,10 +443,7 @@ namespace ToolCrawlData
                         _listAddress.AddRange(books);
                         Thread t = new Thread(delegate ()
                         {
-                            for (int j = 0; j < books.Count<string>(); j++)
-                            {
-                                this.SearchDataDallas(books[j]);
-                            }
+                            this.SearchDataDallas(books.ToList());
                         });
                         t.Start();
                         t.IsBackground = true;
@@ -416,10 +457,7 @@ namespace ToolCrawlData
                                                  select s).ToList<string>();
                     Thread t2 = new Thread(delegate ()
                     {
-                        for (int j = 0; j < listserchnew.Count<string>(); j++)
-                        {
-                            this.SearchDataDallas(listserchnew[j]);
-                        }
+                        this.SearchDataDallas(listserchnew.ToList());
                     });
                     t2.Start();
                     t2.IsBackground = true;
@@ -427,27 +465,30 @@ namespace ToolCrawlData
             }
         }
 
-        public void SearchDataDallas(string address)
+        public void SearchDataDallas(List<string> lstaddress)
         {
-            address = address.Trim();
+            int intstartProcess = 0;
             IWebDriver firefoxDriver = this.FirefoxDriverHide();
-            try
+            foreach (var item in lstaddress)
             {
-                bool flag = string.IsNullOrEmpty(address);
-                if (flag)
-                {
-                    MessageBox.Show("Địa chỉ không được bỏ trống");
-                    string result = "Update " + address + "false";
-                }
-                else
+                string address = item;
+                Tuple<string, string, string> resultAddress = this.ConverAddressDeton(address);
+                try
                 {
                     firefoxDriver.Url = "https://www.dallascad.org/SearchAddr.aspx";
                     firefoxDriver.Navigate();
-                    Tuple<string, string> resultAddress = this.ConverAddressDeton(address);
+                    
                     IWebElement addressNumber = firefoxDriver.FindElement(By.Id("txtAddrNum"));
                     addressNumber.SendKeys(resultAddress.Item1);
                     IWebElement addressName = firefoxDriver.FindElement(By.Id("txtStName"));
                     addressName.SendKeys(resultAddress.Item2);
+
+                    if (!string.IsNullOrEmpty(resultAddress.Item3))
+                    {
+                        IWebElement dropDirection = firefoxDriver.FindElement(By.Id("AcctTypeCheckList1_chkAcctType_0"));
+                        dropDirection.SendKeys(resultAddress.Item3);
+                    }
+
                     WebDriverWait enterMail = new WebDriverWait(firefoxDriver, TimeSpan.FromSeconds(10.0));
                     IWebElement checkBox = firefoxDriver.FindElement(By.Id("AcctTypeCheckList1_chkAcctType_0"));
                     bool flag2 = !checkBox.Selected;
@@ -469,8 +510,18 @@ namespace ToolCrawlData
                     }
                     IWebElement btnSeach = firefoxDriver.FindElement(By.Id("cmdSubmit"));
                     btnSeach.Click();
-                    WebDriverWait wait = new WebDriverWait(firefoxDriver, TimeSpan.FromSeconds(30.0));
-                    wait.Until<bool>((IWebDriver x) => ((IJavaScriptExecutor)firefoxDriver).ExecuteScript("return document.readyState", Array.Empty<object>()).Equals("complete"));
+                    try
+                    {
+                        WebDriverWait wait = new WebDriverWait(firefoxDriver, TimeSpan.FromSeconds(30.0));
+                        wait.Until<bool>((IWebDriver x) => ((IJavaScriptExecutor)firefoxDriver).ExecuteScript("return document.readyState", Array.Empty<object>()).Equals("complete"));
+
+                    }
+                    catch (Exception ex)
+                    {
+                        Thread.Sleep(1000);
+                        continue;
+                    }
+                    
                     IWebElement resultdetail = firefoxDriver.FindElement(By.Id("SearchResults1_dgResults"));
                     string html = resultdetail.Text;
                     bool flag3 = resultdetail != null;
@@ -483,29 +534,32 @@ namespace ToolCrawlData
                             ReadOnlyCollection<IWebElement> objownernames = resulttrs[2].FindElements(By.TagName("td"));
                             string ownerName = objownernames[3].Text;
                             this.setdelegateUpdateValueDataGridView(address, true, ownerName);
-                            firefoxDriver.Quit();
-                            this.FinishProcess(firefoxDriver);
-                            return;
+                            intstartProcess++;
+                            continue;
                         }
                     }
                     this.setdelegateUpdateValueDataGridView(address, true, "Not found Data");
-                    firefoxDriver.Quit();
-                    this.FinishProcess(firefoxDriver);
+                    intstartProcess++;
+                    continue;
+                }
+                catch (Exception exx)
+                {
+                    string result = address + " Khong tim thay du lieu";
+                    this.setdelegateUpdateValueDataGridView(address, false, $"Search Key Data AddressNumber: {resultAddress.Item1} ,Addressname : {resultAddress.Item2}, Direction: {resultAddress.Item3}   Not found Data");
+                    intstartProcess++;
                 }
             }
-            catch (Exception exx)
+            if (intstartProcess == lstaddress.Count)
             {
-                string result = address + " Khong tim thay du lieu";
-                this.setdelegateUpdateValueDataGridView(address, false, "Not found Data");
                 firefoxDriver.Quit();
                 this.FinishProcess(firefoxDriver);
             }
         }
 
 
-        public Tuple<string, string> ConverAddressDeton(string addressfull)
+        public Tuple<string, string, string> ConverAddressDeton(string addressfull)
         {
-            Tuple<string, string> result;
+            Tuple<string, string, string> result;
             try
             {
                 var arrAdrress = addressfull.Split(' ');
@@ -513,6 +567,7 @@ namespace ToolCrawlData
 
                 string addressNumber = arrAdrress[0];
                 string addressStress = "";
+                string Direction = "";
                 for (int i = 1; i < arrAdrress.Count(); i++)
                 {
                     if (i == arrAdrress.Count() - 1)
@@ -524,21 +579,27 @@ namespace ToolCrawlData
                     }
                     else
                     {
-                        addressStress += arrAdrress[i] + " ";
+                        if (i == 1 && arrDirection.Any(s => s == arrAdrress[i]))
+                        {
+                            Direction = arrAdrress[i];
+                        }
+                        else
+                        {
+                            addressStress += arrAdrress[i] + " ";
+                        }
                     }
                 }
-                result = new Tuple<string, string>(addressNumber.Trim(), addressStress.Trim());
+                result = new Tuple<string, string, string>(addressNumber.Trim(), addressStress.Trim(), Direction.Trim());
             }
             catch (Exception exx)
             {
-                result = new Tuple<string, string>("", "");
+                result = new Tuple<string, string, string>("", "", "");
             }
             return result;
         }
 
 
         #endregion
-
 
         public FirefoxDriver FirefoxDriverHide()
         {
@@ -552,37 +613,6 @@ namespace ToolCrawlData
         public void FinishProcess(IWebDriver iwebdriver)
         {
             DisposeDriverService.FinishHim(iwebdriver);
-        }
-
-        private void btnGetDataDetail_Click(object sender, EventArgs e)
-        {
-
-            if (listAddress.Any())
-            {
-
-                IEnumerable<DataGridViewRow> enumerable = from DataGridViewRow r in this.dataGridView1.Rows
-                                                          where Convert.ToString(r.Cells["Status"].Value).Equals("True")
-                                                          select r;
-
-                if (enumerable.Any())
-                {
-
-                    Thread t = new Thread(delegate ()
-                    {
-                        foreach (DataGridViewRow item in enumerable)
-                        {
-
-                            SearchDetailByDriver1(Convert.ToString(item.Cells["FirstName"].Value), Convert.ToString(item.Cells["LastName"].Value), Convert.ToString(item.Cells["Address"].Value));
-                        }
-                    });
-                    t.Start();
-                    t.IsBackground = true;
-                }
-                else
-                {
-
-                }
-            }
         }
 
         public void SearchDetailByDriver1(string firstName, string lastName, string address)
@@ -623,7 +653,7 @@ namespace ToolCrawlData
                 IWebElement ffresults = null;
                 bool checkfailse = true;
                 int countfailse = 3;
-                while (checkfailse )
+                while (checkfailse)
                 {
                     try
                     {
@@ -654,7 +684,7 @@ namespace ToolCrawlData
                         catch (Exception exxx)
                         {
                             countfailse--;
-                            if(countfailse == 0)
+                            if (countfailse == 0)
                             {
                                 checkfailse = false;
                             }
@@ -746,14 +776,14 @@ namespace ToolCrawlData
                                 ffdetail = this.firefoxDriverCallDetail_v1.FindElement(By.Id("dataset-1"));
                             }
                             string results = ffdetail.Text;
-                            string firstName_Detail = Regex.Matches(results, "First Name(.*?)Middle Name", RegexOptions.Singleline)[0].ToString().Replace("First Name", "").Replace("Middle Name", "").Replace("\r\n", string.Empty).Trim();
-                            string midname = Regex.Matches(results, "Middle Name(.*?)Last Name", RegexOptions.Singleline)[0].ToString().Replace("Last Name", "").Replace("Middle Name", "").Replace("\r\n", string.Empty);
-                            string lastName_Detail = Regex.Matches(results, "Last Name(.*?)License number", RegexOptions.Singleline)[0].ToString().Replace("Last Name", "").Replace("License number", "").Replace("\r\n", string.Empty);
+                            //string firstName_Detail = Regex.Matches(results, "First Name(.*?)Middle Name", RegexOptions.Singleline)[0].ToString().Replace("First Name", "").Replace("Middle Name", "").Replace("\r\n", string.Empty).Trim();
+                            //string midname = Regex.Matches(results, "Middle Name(.*?)Last Name", RegexOptions.Singleline)[0].ToString().Replace("Last Name", "").Replace("Middle Name", "").Replace("\r\n", string.Empty);
+                            //string lastName_Detail = Regex.Matches(results, "Last Name(.*?)License number", RegexOptions.Singleline)[0].ToString().Replace("Last Name", "").Replace("License number", "").Replace("\r\n", string.Empty);
                             string licenseNumber = Regex.Matches(results, "License number(.*?)License type", RegexOptions.Singleline)[0].ToString().Replace("License number", "").Replace("License type", "").Replace("\r\n", string.Empty);
-                            string Address = Regex.Matches(results, "Address(.*?)Date of Birth", RegexOptions.Singleline)[0].ToString().Replace("Address", "").Replace("Date of Birth", "").Replace("\r\n", string.Empty);
+                            //string Address = Regex.Matches(results, "Address(.*?)Date of Birth", RegexOptions.Singleline)[0].ToString().Replace("Address", "").Replace("Date of Birth", "").Replace("\r\n", string.Empty);
                             string dateofbirth = Regex.Matches(results, "Date of Birth(.*?)City", RegexOptions.Singleline)[0].ToString().Replace("Date of Birth", "").Replace("City", "").Replace("\r\n", string.Empty);
                             string city_zipcode = Regex.Matches(results, "City/ZIP Code(.*?)Issue Date", RegexOptions.Singleline)[0].ToString().Replace("City/ZIP Code", "").Replace("Issue Date", "").Replace("\r\n", string.Empty);
-                            this.setdelegateDataGridViewCallbackSearchOwner(address, true, licenseNumber, dateofbirth, "True");
+                            this.setdelegateDataGridViewCallbackSearchOwner(address, true, licenseNumber, dateofbirth, "True", city_zipcode);
                         }
                     }
                 }
@@ -763,8 +793,8 @@ namespace ToolCrawlData
                 this.setdelegateDataGridViewCallbackSearchOwner(address, false, "", "", "Error Exception " + ex3.ToString());
             }
         }
-        private delegate void SetDataGridViewCallbackSearchOwner(string address, bool isCrawlData, string licenseNumber, string birthDate, string resultdatafailse);
-        private void setdelegateDataGridViewCallbackSearchOwner(string address, bool isCrawlData, string licenseNumber, string birthDate, string resultdatafailse)
+        private delegate void SetDataGridViewCallbackSearchOwner(string address, bool isCrawlData, string licenseNumber, string birthDate, string resultdatafailse, string ZipCode);
+        private void setdelegateDataGridViewCallbackSearchOwner(string address, bool isCrawlData, string licenseNumber, string birthDate, string resultdatafailse, string ZipCode = "")
         {
             bool invokeRequired = this.dataGridView1.InvokeRequired;
             if (invokeRequired)
@@ -776,16 +806,17 @@ namespace ToolCrawlData
                     isCrawlData,
                     licenseNumber,
                     birthDate,
-                    resultdatafailse
+                    resultdatafailse,
+                    ZipCode
                 });
             }
             else
             {
-                this.UpdateValueDataGridViewForDetailSearchOwner(address, isCrawlData, licenseNumber, birthDate, resultdatafailse);
+                this.UpdateValueDataGridViewForDetailSearchOwner(address, isCrawlData, licenseNumber, birthDate, resultdatafailse,ZipCode);
             }
         }
 
-        public void UpdateValueDataGridViewForDetailSearchOwner(string address, bool isCrawlData, string licenseNumber, string birthDate, string resultdatafailse)
+        public void UpdateValueDataGridViewForDetailSearchOwner(string address, bool isCrawlData, string licenseNumber, string birthDate, string resultdatafailse,string zipcode)
         {
             DataGridViewRow row = (from DataGridViewRow r in this.dataGridView1.Rows
                                    where r.Cells["Address"].Value.ToString().Equals(address)
@@ -800,6 +831,7 @@ namespace ToolCrawlData
                     row.Cells[8].Value = "True";
                     row.Cells[6].Value = licenseNumber;
                     row.Cells[7].Value = birthDate;
+                    row.Cells[9].Value = zipcode;
                     this.db.UpdateData(new SearchData
                     {
                         Address = Convert.ToString(row.Cells["Address"].Value),
@@ -807,8 +839,9 @@ namespace ToolCrawlData
                         FirstName = Convert.ToString(row.Cells["FirstName"].Value),
                         MiddleName = Convert.ToString(row.Cells["MiddleName"].Value),
                         LastName = Convert.ToString(row.Cells["LastName"].Value),
-                        LicenseNumber = Convert.ToString(row.Cells["LicenseNumber"].Value),
-                        BirthDay = Convert.ToString(row.Cells["BirthDay"].Value)
+                        LicenseNumber = licenseNumber,
+                        BirthDay = birthDate,
+                        ZipCode = zipcode
                     });
                 }
                 else
@@ -843,19 +876,6 @@ namespace ToolCrawlData
             }
         }
 
-        private void btnclearall_Click(object sender, EventArgs e)
-        {
-            this.firefoxDriverCallDetail_v1 = null;
-            this.firefoxDriverCallDetail_v2 = null;
-            this.firefoxDriverCallDetail_v3 = null;
-            this.firefoxDriverCallDetail_v4 = null;
-            this.firefoxDriverCallDetail_v5 = null;
-            this.countSuccessDetail = 0;
-            this.dataGridView1.Rows.Clear();
-            this.dataGridView1.Refresh();
-            this.listAddress = new List<string>();
-        }
-
         private List<string> arrPermist = new List<string>
         {
             "AVE",
@@ -885,7 +905,159 @@ namespace ToolCrawlData
             "SE",
             "SW"
         };
+
+        private void btnclearall_Click(object sender, EventArgs e)
+        {
+            this.firefoxDriverCallDetail_v1 = null;
+            this.firefoxDriverCallDetail_v2 = null;
+            this.firefoxDriverCallDetail_v3 = null;
+            this.firefoxDriverCallDetail_v4 = null;
+            this.firefoxDriverCallDetail_v5 = null;
+            this.countSuccessDetail = 0;
+            this.dataGridView1.Rows.Clear();
+            this.dataGridView1.Refresh();
+            this.listAddress = new List<string>();
+            btnGetDataDetail.Text = "Get DataPulic.Com";
+            btnGetDataDetail.Enabled = true;
+            btnGetOwnerName.Text = "Get Owner Name";
+            btnGetOwnerName.Enabled = true;
+            lblfailon.Text = "0";
+            lblsuccesson.Text = "0";
+            lbltotalon.Text = "0";
+        }
+
+        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            bool flag = this.dataGridView1.Columns[e.ColumnIndex].Name == "Remove";
+            if (flag)
+            {
+                DataGridViewRow row = (from DataGridViewRow r in this.dataGridView1.Rows
+                                       where r.Index == e.RowIndex
+                                       select r).First<DataGridViewRow>();
+                string address = Convert.ToString(row.Cells["Address"].Value);
+                bool flag2 = Convert.ToString(row.Cells["Status"].Value) == "True" || Convert.ToString(row.Cells["ResultDetail"].Value) == "True";
+                if (flag2)
+                {
+                    DialogResult dialogResult = MessageBox.Show("Sure", "Accept remove ", MessageBoxButtons.YesNo);
+                    bool flag3 = dialogResult == DialogResult.Yes;
+                    if (flag3)
+                    {
+                        this.listAddress.Remove(address);
+                        this.dataGridView1.Rows.RemoveAt(e.RowIndex);
+                    }
+                }
+                else
+                {
+                    this.listAddress.Remove(address);
+                    this.dataGridView1.Rows.RemoveAt(e.RowIndex);
+                }
+            }
+        }
+
+        private void btnGetDataDetail_Click(object sender, EventArgs e)
+        {
+            bool flag = this.listAddress.Any<string>();
+            if (flag)
+            {
+                IEnumerable<DataGridViewRow> enumerable = from DataGridViewRow r in this.dataGridView1.Rows
+                                                          where Convert.ToString(r.Cells["Status"].Value).Equals("True") 
+                                                          select r;
+                if (enumerable.Any())
+                {
+                    Thread t = new Thread(delegate ()
+                    {
+                        foreach (DataGridViewRow item in enumerable)
+                        {
+                        SearchDetailByDriver1(Convert.ToString(item.Cells["FirstName"].Value), Convert.ToString(item.Cells["LastName"].Value), Convert.ToString(item.Cells["Address"].Value));
+                    }
+                    });
+                    t.Start();
+                    t.IsBackground = true;
+                }
+            }
+            else
+            {
+                MessageBox.Show("Data Search NotFound");
+            }
+        }
+
+        private void btnviewhistory_Click(object sender, EventArgs e)
+        {
+            FormHistory a = new FormHistory();
+            a.ShowDialog();
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            bool flag = this.dataGridView1.RowCount > 0;
+            if (flag)
+            {
+                object misValue = Missing.Value;
+                Microsoft.Office.Interop.Excel.Application xlApp = (Microsoft.Office.Interop.Excel.Application)Activator.CreateInstance(Marshal.GetTypeFromCLSID(new Guid("00024500-0000-0000-C000-000000000046")));
+                Workbook xlWorkBook = xlApp.Workbooks.Add(misValue);
+                
+                List<DataGridViewRow> rows = this.dataGridView1.Rows.Cast<DataGridViewRow>().ToList<DataGridViewRow>();
+                bool @checked = this.rddataownersuccess.Checked;
+                Worksheet xlWorkSheet =  xlWorkBook.Worksheets.get_Item(1);
+                if (@checked)
+                {
+                    rows = (from s in rows
+                            where Convert.ToString(s.Cells["Status"].Value) == "True"
+                            select s).ToList<DataGridViewRow>();
+                }
+                bool checked2 = this.rddatasuccessdetail.Checked;
+                if (checked2)
+                {
+                    rows = (from s in rows
+                            where Convert.ToString(s.Cells["ResultDetail"].Value) == "True"
+                            select s).ToList<DataGridViewRow>();
+                }
+                for (int x = 1; x < this.dataGridView1.Columns.Count + 1; x++)
+                {
+                    xlWorkSheet.Cells[1, x] = this.dataGridView1.Columns[x - 1].HeaderText;
+                }
+                for (int i = 0; i < rows.Count; i++)
+                {
+                    for (int j = 0; j < this.dataGridView1.ColumnCount; j++)
+                    {
+                        xlWorkSheet.Cells[i + 2, j + 1] = Convert.ToString(rows[i].Cells[j].Value);
+                    }
+                }
+                SaveFileDialog saveFileDialoge = new SaveFileDialog();
+                saveFileDialoge.FileName = "ExportDataCrawl" + Guid.NewGuid();
+                saveFileDialoge.DefaultExt = ".xlsx";
+                bool flag2 = saveFileDialoge.ShowDialog() == DialogResult.OK;
+                if (flag2)
+                {
+                    xlWorkBook.SaveAs(saveFileDialoge.FileName, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, XlSaveAsAccessMode.xlExclusive, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing);
+                }
+                xlWorkBook.Close(true, misValue, misValue);
+                xlApp.Quit();
+                this.releaseObject(xlWorkSheet);
+                this.releaseObject(xlWorkBook);
+                this.releaseObject(xlApp);
+            }
+            else
+            {
+                MessageBox.Show("Data Not Found");
+            }
+        }
+        private void releaseObject(object obj)
+        {
+            try
+            {
+                Marshal.ReleaseComObject(obj);
+                obj = null;
+            }
+            catch (Exception ex)
+            {
+                obj = null;
+                MessageBox.Show("Exception Occured while releasing object " + ex.ToString());
+            }
+            finally
+            {
+                GC.Collect();
+            }
+        }
     }
 }
-    
-
