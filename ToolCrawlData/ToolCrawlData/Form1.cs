@@ -125,6 +125,17 @@ namespace ToolCrawlData
 
         private void btngetdataowner_Click(object sender, EventArgs e)
         {
+            if(this.comboBox1.SelectedItem == null)
+            {
+                MessageBox.Show("Choose City!");
+                return;
+            }
+
+            if (!listAddress.Any())
+            {
+                MessageBox.Show("Data Not Fonund!");
+                return;
+            }
             btnGetOwnerName.Text = "Get Owner Name...";
             btnGetOwnerName.Enabled = false;
             if (this.comboBox1.SelectedItem.ToString() == _Denton)
