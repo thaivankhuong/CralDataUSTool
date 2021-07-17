@@ -1,0 +1,9 @@
+D:\khuong\Free Lance Project\Crall Data Tool US\CralDataUSTool\ToolCrawlData\ToolCrawlData\bin\Debug\ToolCrawlData.exe.config
+D:\khuong\Free Lance Project\Crall Data Tool US\CralDataUSTool\ToolCrawlData\ToolCrawlData\bin\Debug\ToolCrawlData.exe
+D:\khuong\Free Lance Project\Crall Data Tool US\CralDataUSTool\ToolCrawlData\ToolCrawlData\bin\Debug\ToolCrawlData.pdb
+D:\khuong\Free Lance Project\Crall Data Tool US\CralDataUSTool\ToolCrawlData\ToolCrawlData\obj\Debug\ToolCrawlData.csprojResolveAssemblyReference.cache
+D:\khuong\Free Lance Project\Crall Data Tool US\CralDataUSTool\ToolCrawlData\ToolCrawlData\obj\Debug\ToolCrawlData.Form1.resources
+D:\khuong\Free Lance Project\Crall Data Tool US\CralDataUSTool\ToolCrawlData\ToolCrawlData\obj\Debug\ToolCrawlData.Properties.Resources.resources
+D:\khuong\Free Lance Project\Crall Data Tool US\CralDataUSTool\ToolCrawlData\ToolCrawlData\obj\Debug\ToolCrawlData.csproj.GenerateResource.Cache
+D:\khuong\Free Lance Project\Crall Data Tool US\CralDataUSTool\ToolCrawlData\ToolCrawlData\obj\Debug\ToolCrawlData.exe
+D:\khuong\Free Lance Project\Crall Data Tool US\CralDataUSTool\ToolCrawlData\ToolCrawlData\obj\Debug\ToolCrawlData.pdb
