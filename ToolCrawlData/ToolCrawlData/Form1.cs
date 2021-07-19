@@ -29,6 +29,7 @@ namespace ToolCrawlData
     {
         public const string _Dallas = "Dallas";
         public const string _Denton = "Denton";
+        public const string _Collin = "Collin";
         //
         public List<string> listAddress = new List<string>();
         private DBContext db = new DBContext();
@@ -52,6 +53,7 @@ namespace ToolCrawlData
             this.txtpassword.PasswordChar = '*';
             this.comboBox1.Items.Add(_Dallas);
             this.comboBox1.Items.Add(_Denton);
+            this.comboBox1.Items.Add(_Collin);
         }
 
         private void label1_Click(object sender, EventArgs e)
@@ -84,35 +86,61 @@ namespace ToolCrawlData
                         DataSet dataSet = reader.AsDataSet(conf);
                         System.Data.DataTable dataTable = dataSet.Tables[0];
                         this.dataGridView1.Rows.Clear();
-                        for (int i = 0; i < dataTable.Rows.Count; i++)
+                        if (this.comboBox1.SelectedItem.ToString() == _Dallas || this.comboBox1.SelectedItem.ToString() == _Denton)
                         {
-                            DataGridViewRow newRow = new DataGridViewRow();
-                            newRow.CreateCells(this.dataGridView1);
-                            string _addressIndex = "";
-                            if (this.comboBox1.SelectedItem.ToString() == _Dallas)
-                                _addressIndex = "Address";
-                            else if (this.comboBox1.SelectedItem.ToString() == _Denton)
-                                _addressIndex = "site_addr";
-                            object obj = dataTable.Rows[i][_addressIndex];
-                            string text;
-                            if (obj == null)
+                            for (int i = 0; i < dataTable.Rows.Count; i++)
                             {
-                                text = null;
-                            }
-                            else
-                            {
-                                string text2 = obj.ToString();
-                                text = ((text2 != null) ? text2.Trim() : null);
-                            }
-                            string address = text;
-                            newRow.Cells[0].Value = address;
-                            bool flag2 = !this.listAddress.Contains(address);
-                            if (flag2)
-                            {
-                                this.listAddress.Add(address);
-                                this.dataGridView1.Rows.Add(newRow);
+                                DataGridViewRow newRow = new DataGridViewRow();
+                                newRow.CreateCells(this.dataGridView1);
+                                string _addressIndex = "";
+                                if (this.comboBox1.SelectedItem.ToString() == _Dallas)
+                                    _addressIndex = "Address";
+                                else if (this.comboBox1.SelectedItem.ToString() == _Denton)
+                                    _addressIndex = "site_addr";
+                                object obj = dataTable.Rows[i][_addressIndex];
+                                string text;
+                                if (obj == null)
+                                {
+                                    text = null;
+                                }
+                                else
+                                {
+                                    string text2 = obj.ToString();
+                                    text = ((text2 != null) ? text2.Trim() : null);
+                                }
+                                string address = text;
+                                newRow.Cells[0].Value = address;
+                                bool flag2 = !this.listAddress.Contains(address);
+                                if (flag2)
+                                {
+                                    this.listAddress.Add(address);
+                                    this.dataGridView1.Rows.Add(newRow);
+                                }
                             }
                         }
+                        else if(this.comboBox1.SelectedItem.ToString() == _Collin)
+                        {
+                            for (int i = dataTable.Rows.Count - 1; i > 0 ; i--)
+                            {
+                                var textrow = Convert.ToString(dataTable.Rows[i][2]);
+                                var textrowdeription = Convert.ToString(dataTable.Rows[i][1]);
+                                if (textrow.Contains("Allen, TX"))
+                                {
+                                    string address = Convert.ToString(dataTable.Rows[i-1][2]);
+                                    if(!listAddress.Any(s=>s == address))
+                                    {
+                                        DataGridViewRow newRow = new DataGridViewRow();
+                                        newRow.CreateCells(this.dataGridView1);
+                                        newRow.Cells[0].Value = address;
+                                        this.listAddress.Add(address);
+                                        this.dataGridView1.Rows.Add(newRow);
+
+                                    }
+
+                                }
+                            }
+                        }
+                        
                     }
                     lbltotalon.Text = listAddress.Count.ToString();
                 }
@@ -145,6 +173,10 @@ namespace ToolCrawlData
             else if (this.comboBox1.SelectedItem.ToString() == _Dallas)
             {
                 this.SearchAllAddressDallas();
+            }
+            else if (this.comboBox1.SelectedItem.ToString() == _Collin)
+            {
+                this.SearchAllAddressCollin();
             }
         }
 
@@ -349,6 +381,24 @@ namespace ToolCrawlData
                             });
                             lblsuccesson.Text = Convert.ToString(Convert.ToInt32(lblsuccesson.Text) + 1);
                         }
+                        if (comboBox1.SelectedItem.ToString() == _Collin)
+                        {
+                            row.DefaultCellStyle.BackColor = Color.Green;
+                            row.Cells[1].Value = resultData;
+                            row.Cells[2].Value = "True";
+                            Tuple<string, string> result2 = this.GetFirstNameAndLastnameByFullNameCollin(resultData);
+                            row.Cells[3].Value = result2.Item2;
+                            row.Cells[5].Value = result2.Item1;
+                            this.db.insertDAta(new SearchData
+                            {
+                                Address = Convert.ToString(row.Cells["Address"].Value),
+                                FullName = Convert.ToString(row.Cells["OwnerName"].Value),
+                                FirstName = Convert.ToString(row.Cells["FirstName"].Value),
+                                MiddleName = Convert.ToString(row.Cells["MiddleName"].Value),
+                                LastName = Convert.ToString(row.Cells["LastName"].Value)
+                            });
+                            lblsuccesson.Text = Convert.ToString(Convert.ToInt32(lblsuccesson.Text) + 1);
+                        }
                     }
                     else
                     {
@@ -399,6 +449,35 @@ namespace ToolCrawlData
             else
             {
                 result = new Tuple<string, string, string>("", "", "");
+            }
+            return result;
+        }
+
+        public Tuple<string, string> GetFirstNameAndLastnameByFullNameCollin(string fullName)
+        {
+            List<string> arrstring = (from s in fullName.Split(new char[]
+            {
+                ' '
+            })
+                                      where !string.IsNullOrEmpty(s)
+                                      select s).ToList<string>();
+            bool flag = arrstring.Any<string>();
+            Tuple<string, string> result;
+            if (flag)
+            {
+                bool flag2 = arrstring.Count > 1;
+                if (flag2)
+                {
+                    result = new Tuple<string, string>(arrstring[0].Trim(), arrstring[1]);
+                }
+                else
+                {
+                    result = new Tuple<string, string>(arrstring[0].Trim(), "");
+                }
+            }
+            else
+            {
+                result = new Tuple<string, string>("", "");
             }
             return result;
         }
@@ -549,7 +628,7 @@ namespace ToolCrawlData
                             continue;
                         }
                     }
-                    this.setdelegateUpdateValueDataGridView(address, true, "Not found Data");
+                    this.setdelegateUpdateValueDataGridView(address, false, "Not found Data");
                     intstartProcess++;
                     continue;
                 }
@@ -609,6 +688,135 @@ namespace ToolCrawlData
             return result;
         }
 
+
+        #endregion
+
+        #region  Colin
+        public void SearchAllAddressCollin()
+        {
+            bool flag = this.listAddress.Any<string>();
+            if (flag)
+            {
+                List<string> _listAddress = new List<string>();
+                int page = this.listAddress.Count / 10;
+                double perpage = (double)(this.listAddress.Count % 10);
+                for (int i = 1; i <= 10; i++)
+                {
+                    bool flag2 = page == 0;
+                    if (flag2)
+                    {
+                        page = 1;
+                    }
+                    string[] books = this.listAddress.Skip((i - 1) * page).Take(page).ToArray<string>();
+                    bool flag3 = books.Any<string>();
+                    if (flag3)
+                    {
+                        _listAddress.AddRange(books);
+                        Thread t = new Thread(delegate ()
+                        {
+                            this.SearchDataCollin(books.ToList());
+                        });
+                        t.Start();
+                        t.IsBackground = true;
+                    }
+                }
+                bool flag4 = _listAddress.Count < this.listAddress.Count;
+                if (flag4)
+                {
+                    List<string> listserchnew = (from s in this.listAddress
+                                                 where !_listAddress.Any((string x) => x == s)
+                                                 select s).ToList<string>();
+                    Thread t2 = new Thread(delegate ()
+                    {
+                        this.SearchDataCollin(listserchnew.ToList());
+                    });
+                    t2.Start();
+                    t2.IsBackground = true;
+                }
+            }
+        }
+        public void SearchDataCollin(List<string> lstaddress)
+        {
+            int intstartProcess = 0;
+            IWebDriver firefoxDriver = this.FirefoxDriverHide();
+            //IWebDriver firefoxDriver =  new FirefoxDriver();
+            foreach (var item in lstaddress)
+            {
+                string address = item;
+                Tuple<string, string> resultAddress = this.ConverAddressCollin(address);
+                try
+                {
+                    //https://www.collincad.org/propertysearch?situs_num=1617&situs_street=Nestledown%Dr
+
+
+                    firefoxDriver.Url = "https://www.collincad.org/propertysearch?situs_num=" + resultAddress.Item1 + "&situs_street=" + resultAddress.Item2.Replace(" ", "%");
+                    //firefoxDriver.Url = "https://www.collincad.org/propertysearch";
+                    firefoxDriver.Navigate();
+                    if(firefoxDriver.FindElement(By.TagName("body")).Text.Contains("Sorry, but we couldn't find any properties matching the criteria you provided"))
+                    {
+                        this.setdelegateUpdateValueDataGridView(address, false, "Not found Data");
+                        intstartProcess++;
+                        continue;
+                    }
+
+                    IWebElement resultdetail = firefoxDriver.FindElement(By.Id("propertysearchresults"));
+                    string html = resultdetail.Text;
+                    bool flag3 = resultdetail != null;
+                    if (flag3)
+                    {
+                        IWebElement resultbody = resultdetail.FindElement(By.TagName("tbody"));
+                        ReadOnlyCollection<IWebElement> resulttrs = resultbody.FindElements(By.TagName("tr"));
+                        bool flag4 = resulttrs.Any<IWebElement>();
+                        if (flag4)
+                        {
+                            ReadOnlyCollection<IWebElement> objownernames = resulttrs[0].FindElements(By.TagName("td"));
+                            string ownerName = objownernames[2].Text;
+                            this.setdelegateUpdateValueDataGridView(address, true, ownerName);
+                            intstartProcess++;
+                            continue;
+                        }
+                    }
+                    this.setdelegateUpdateValueDataGridView(address, false, "Not found Data");
+                    intstartProcess++;
+                    continue;
+                }
+                catch (Exception exx)
+                {
+                    string result = address + " Khong tim thay du lieu";
+                    this.setdelegateUpdateValueDataGridView(address, false, $"Search Key Data AddressNumber: {resultAddress.Item1} ,Addressname : {resultAddress.Item2}   Not found Data");
+                    intstartProcess++;
+                }
+            }
+            //if (intstartProcess == lstaddress.Count)
+            //{
+                firefoxDriver.Quit();
+                this.FinishProcess(firefoxDriver);
+            //}
+        }
+
+
+        public Tuple<string, string> ConverAddressCollin(string addressfull)
+        {
+            Tuple<string, string> result;
+            try
+            {
+                var arrAdrress = addressfull.Split(' ');
+                arrAdrress = arrAdrress.Where(s => !string.IsNullOrEmpty(s)).ToArray();
+
+                string addressNumber = arrAdrress[0];
+                string addressStress = "";
+                for (int i = 1; i < arrAdrress.Count(); i++)
+                {
+                    addressStress += arrAdrress[i] + " ";
+                }
+                result = new Tuple<string, string>(addressNumber.Trim(), addressStress.Trim());
+            }
+            catch (Exception exx)
+            {
+                result = new Tuple<string, string>("", "");
+            }
+            return result;
+        }
 
         #endregion
 
@@ -916,6 +1124,11 @@ namespace ToolCrawlData
             "SE",
             "SW"
         };
+
+        public List<string> arrStressNameCollin = new List<string>
+        {
+            "AVE", "BLF", "BLVD", "BND", "CIR", "CRK", "CRST", "CT", "CV", "DR", "EXPY", "FWY", "GLN", "HL", "HOLW", "HWY", "LN", "LNDG", "LOOP", "PARK", "PASS", "PATH", "PKWY", "PL", "PLACE", "PT", "RD", "RDG", "ROW", "RUN", "SQ", "ST", "TER", "TRCE", "TRL", "VW", "WAY", "XING"
+        }; 
 
         private void btnclearall_Click(object sender, EventArgs e)
         {

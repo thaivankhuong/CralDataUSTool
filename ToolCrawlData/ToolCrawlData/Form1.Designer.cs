@@ -30,28 +30,34 @@ namespace ToolCrawlData
         private void InitializeComponent()
         {
             this.panel1 = new System.Windows.Forms.Panel();
+            this.btnviewhistory = new System.Windows.Forms.Button();
+            this.btnclearall = new System.Windows.Forms.Button();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.button2 = new System.Windows.Forms.Button();
             this.rddatasuccessdetail = new System.Windows.Forms.RadioButton();
             this.rddataownersuccess = new System.Windows.Forms.RadioButton();
             this.rdfulldata = new System.Windows.Forms.RadioButton();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
             this.btnGetDataDetail = new System.Windows.Forms.Button();
             this.txtpassword = new System.Windows.Forms.TextBox();
             this.txtusername = new System.Windows.Forms.TextBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.label7 = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
+            this.lblsuccesson = new System.Windows.Forms.Label();
+            this.lblfailon = new System.Windows.Forms.Label();
+            this.lbltotalon = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.btnbrower = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.txtfromExcel = new System.Windows.Forms.TextBox();
             this.btnGetOwnerName = new System.Windows.Forms.Button();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.btnclearall = new System.Windows.Forms.Button();
-            this.btnviewhistory = new System.Windows.Forms.Button();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.btnbrower = new System.Windows.Forms.Button();
             this.Address = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.OwnerName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Status = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -63,12 +69,6 @@ namespace ToolCrawlData
             this.ResultDetail = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ZipCode = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Remove = new System.Windows.Forms.DataGridViewButtonColumn();
-            this.label5 = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
-            this.label7 = new System.Windows.Forms.Label();
-            this.lbltotalon = new System.Windows.Forms.Label();
-            this.lblfailon = new System.Windows.Forms.Label();
-            this.lblsuccesson = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -89,6 +89,26 @@ namespace ToolCrawlData
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(1305, 146);
             this.panel1.TabIndex = 0;
+            // 
+            // btnviewhistory
+            // 
+            this.btnviewhistory.Location = new System.Drawing.Point(1101, 100);
+            this.btnviewhistory.Name = "btnviewhistory";
+            this.btnviewhistory.Size = new System.Drawing.Size(96, 23);
+            this.btnviewhistory.TabIndex = 1;
+            this.btnviewhistory.Text = "View History";
+            this.btnviewhistory.UseVisualStyleBackColor = true;
+            this.btnviewhistory.Click += new System.EventHandler(this.btnviewhistory_Click);
+            // 
+            // btnclearall
+            // 
+            this.btnclearall.Location = new System.Drawing.Point(1101, 12);
+            this.btnclearall.Name = "btnclearall";
+            this.btnclearall.Size = new System.Drawing.Size(85, 30);
+            this.btnclearall.TabIndex = 1;
+            this.btnclearall.Text = "Clear All";
+            this.btnclearall.UseVisualStyleBackColor = true;
+            this.btnclearall.Click += new System.EventHandler(this.btnclearall_Click);
             // 
             // groupBox3
             // 
@@ -160,6 +180,24 @@ namespace ToolCrawlData
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Get Data Detail";
             // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(7, 60);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(56, 13);
+            this.label4.TabIndex = 4;
+            this.label4.Text = "PassWord";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(6, 34);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(57, 13);
+            this.label3.TabIndex = 3;
+            this.label3.Text = "UserName";
+            // 
             // btnGetDataDetail
             // 
             this.btnGetDataDetail.Location = new System.Drawing.Point(85, 97);
@@ -204,6 +242,78 @@ namespace ToolCrawlData
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Get Owner Name";
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label7.Location = new System.Drawing.Point(279, 101);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(101, 24);
+            this.label7.TabIndex = 5;
+            this.label7.Text = "Success :";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label6.Location = new System.Drawing.Point(143, 101);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(78, 24);
+            this.label6.TabIndex = 5;
+            this.label6.Text = "Failse :";
+            // 
+            // lblsuccesson
+            // 
+            this.lblsuccesson.AutoSize = true;
+            this.lblsuccesson.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblsuccesson.ForeColor = System.Drawing.Color.Green;
+            this.lblsuccesson.Location = new System.Drawing.Point(386, 101);
+            this.lblsuccesson.Name = "lblsuccesson";
+            this.lblsuccesson.Size = new System.Drawing.Size(21, 24);
+            this.lblsuccesson.TabIndex = 5;
+            this.lblsuccesson.Text = "0";
+            // 
+            // lblfailon
+            // 
+            this.lblfailon.AutoSize = true;
+            this.lblfailon.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblfailon.ForeColor = System.Drawing.Color.Red;
+            this.lblfailon.Location = new System.Drawing.Point(219, 101);
+            this.lblfailon.Name = "lblfailon";
+            this.lblfailon.Size = new System.Drawing.Size(21, 24);
+            this.lblfailon.TabIndex = 5;
+            this.lblfailon.Text = "0";
+            // 
+            // lbltotalon
+            // 
+            this.lbltotalon.AutoSize = true;
+            this.lbltotalon.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbltotalon.Location = new System.Drawing.Point(68, 101);
+            this.lbltotalon.Name = "lbltotalon";
+            this.lbltotalon.Size = new System.Drawing.Size(21, 24);
+            this.lbltotalon.TabIndex = 5;
+            this.lbltotalon.Text = "0";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label5.Location = new System.Drawing.Point(6, 101);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(74, 24);
+            this.label5.TabIndex = 5;
+            this.label5.Text = "Total : ";
+            // 
+            // btnbrower
+            // 
+            this.btnbrower.Location = new System.Drawing.Point(359, 46);
+            this.btnbrower.Name = "btnbrower";
+            this.btnbrower.Size = new System.Drawing.Size(73, 23);
+            this.btnbrower.TabIndex = 3;
+            this.btnbrower.Text = "Browser";
+            this.btnbrower.UseVisualStyleBackColor = true;
+            this.btnbrower.Click += new System.EventHandler(this.btnbrower_Click);
             // 
             // label2
             // 
@@ -258,44 +368,6 @@ namespace ToolCrawlData
             this.panel2.Size = new System.Drawing.Size(1305, 636);
             this.panel2.TabIndex = 1;
             // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(6, 34);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(57, 13);
-            this.label3.TabIndex = 3;
-            this.label3.Text = "UserName";
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(7, 60);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(56, 13);
-            this.label4.TabIndex = 4;
-            this.label4.Text = "PassWord";
-            // 
-            // btnclearall
-            // 
-            this.btnclearall.Location = new System.Drawing.Point(1101, 12);
-            this.btnclearall.Name = "btnclearall";
-            this.btnclearall.Size = new System.Drawing.Size(85, 30);
-            this.btnclearall.TabIndex = 1;
-            this.btnclearall.Text = "Clear All";
-            this.btnclearall.UseVisualStyleBackColor = true;
-            this.btnclearall.Click += new System.EventHandler(this.btnclearall_Click);
-            // 
-            // btnviewhistory
-            // 
-            this.btnviewhistory.Location = new System.Drawing.Point(1101, 100);
-            this.btnviewhistory.Name = "btnviewhistory";
-            this.btnviewhistory.Size = new System.Drawing.Size(96, 23);
-            this.btnviewhistory.TabIndex = 1;
-            this.btnviewhistory.Text = "View History";
-            this.btnviewhistory.UseVisualStyleBackColor = true;
-            this.btnviewhistory.Click += new System.EventHandler(this.btnviewhistory_Click);
-            // 
             // dataGridView1
             // 
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
@@ -317,16 +389,6 @@ namespace ToolCrawlData
             this.dataGridView1.Size = new System.Drawing.Size(1305, 636);
             this.dataGridView1.TabIndex = 0;
             this.dataGridView1.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
-            // 
-            // btnbrower
-            // 
-            this.btnbrower.Location = new System.Drawing.Point(359, 46);
-            this.btnbrower.Name = "btnbrower";
-            this.btnbrower.Size = new System.Drawing.Size(73, 23);
-            this.btnbrower.TabIndex = 3;
-            this.btnbrower.Text = "Brower";
-            this.btnbrower.UseVisualStyleBackColor = true;
-            this.btnbrower.Click += new System.EventHandler(this.btnbrower_Click);
             // 
             // Address
             // 
@@ -384,68 +446,6 @@ namespace ToolCrawlData
             this.Remove.Name = "Remove";
             this.Remove.Text = "Remove";
             this.Remove.UseColumnTextForButtonValue = true;
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(6, 101);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(74, 24);
-            this.label5.TabIndex = 5;
-            this.label5.Text = "Total : ";
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(143, 101);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(78, 24);
-            this.label6.TabIndex = 5;
-            this.label6.Text = "Failse :";
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label7.Location = new System.Drawing.Point(279, 101);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(101, 24);
-            this.label7.TabIndex = 5;
-            this.label7.Text = "Success :";
-            // 
-            // lbltotalon
-            // 
-            this.lbltotalon.AutoSize = true;
-            this.lbltotalon.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbltotalon.Location = new System.Drawing.Point(68, 101);
-            this.lbltotalon.Name = "lbltotalon";
-            this.lbltotalon.Size = new System.Drawing.Size(21, 24);
-            this.lbltotalon.TabIndex = 5;
-            this.lbltotalon.Text = "0";
-            // 
-            // lblfailon
-            // 
-            this.lblfailon.AutoSize = true;
-            this.lblfailon.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblfailon.ForeColor = System.Drawing.Color.Red;
-            this.lblfailon.Location = new System.Drawing.Point(219, 101);
-            this.lblfailon.Name = "lblfailon";
-            this.lblfailon.Size = new System.Drawing.Size(21, 24);
-            this.lblfailon.TabIndex = 5;
-            this.lblfailon.Text = "0";
-            // 
-            // lblsuccesson
-            // 
-            this.lblsuccesson.AutoSize = true;
-            this.lblsuccesson.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblsuccesson.ForeColor = System.Drawing.Color.Green;
-            this.lblsuccesson.Location = new System.Drawing.Point(386, 101);
-            this.lblsuccesson.Name = "lblsuccesson";
-            this.lblsuccesson.Size = new System.Drawing.Size(21, 24);
-            this.lblsuccesson.TabIndex = 5;
-            this.lblsuccesson.Text = "0";
             // 
             // Form1
             // 
