@@ -68,6 +68,7 @@ namespace ToolCrawlData
             this.BirthDay = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ResultDetail = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ZipCode = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.City = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Remove = new System.Windows.Forms.DataGridViewButtonColumn();
             this.panel1.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -382,6 +383,7 @@ namespace ToolCrawlData
             this.BirthDay,
             this.ResultDetail,
             this.ZipCode,
+            this.City,
             this.Remove});
             this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridView1.Location = new System.Drawing.Point(0, 0);
@@ -440,6 +442,11 @@ namespace ToolCrawlData
             this.ZipCode.HeaderText = "ZipCode";
             this.ZipCode.Name = "ZipCode";
             // 
+            // City
+            // 
+            this.City.HeaderText = "City";
+            this.City.Name = "City";
+            // 
             // Remove
             // 
             this.Remove.HeaderText = "Remove";
@@ -495,6 +502,12 @@ namespace ToolCrawlData
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.DataGridView dataGridView1;
         private System.Windows.Forms.Button btnbrower;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label lblsuccesson;
+        private System.Windows.Forms.Label lblfailon;
+        private System.Windows.Forms.Label lbltotalon;
+        private System.Windows.Forms.Label label5;
         private System.Windows.Forms.DataGridViewTextBoxColumn Address;
         private System.Windows.Forms.DataGridViewTextBoxColumn OwnerName;
         private System.Windows.Forms.DataGridViewTextBoxColumn Status;
@@ -505,13 +518,8 @@ namespace ToolCrawlData
         private System.Windows.Forms.DataGridViewTextBoxColumn BirthDay;
         private System.Windows.Forms.DataGridViewTextBoxColumn ResultDetail;
         private System.Windows.Forms.DataGridViewTextBoxColumn ZipCode;
+        private System.Windows.Forms.DataGridViewTextBoxColumn City;
         private System.Windows.Forms.DataGridViewButtonColumn Remove;
-        private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.Label lblsuccesson;
-        private System.Windows.Forms.Label lblfailon;
-        private System.Windows.Forms.Label lbltotalon;
-        private System.Windows.Forms.Label label5;
     }
 }
 

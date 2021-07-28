@@ -30,6 +30,17 @@ namespace ToolCrawlData
         private void InitializeComponent()
         {
             this.panel1 = new System.Windows.Forms.Panel();
+            this.btnExportExcel = new System.Windows.Forms.Button();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.btnSearch = new System.Windows.Forms.Button();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.txtzipcode = new System.Windows.Forms.TextBox();
+            this.txtlicensenumber = new System.Windows.Forms.TextBox();
+            this.txtName = new System.Windows.Forms.TextBox();
+            this.txtAddress = new System.Windows.Forms.TextBox();
             this.panel2 = new System.Windows.Forms.Panel();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.Address = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -41,25 +52,16 @@ namespace ToolCrawlData
             this.BirthDay = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ZipCode = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Remove = new System.Windows.Forms.DataGridViewButtonColumn();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.txtAddress = new System.Windows.Forms.TextBox();
-            this.txtName = new System.Windows.Forms.TextBox();
-            this.txtlicensenumber = new System.Windows.Forms.TextBox();
-            this.txtzipcode = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.btnExportExcel = new System.Windows.Forms.Button();
-            this.btnSearch = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
+            this.groupBox1.SuspendLayout();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
-            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.button1);
             this.panel1.Controls.Add(this.btnExportExcel);
             this.panel1.Controls.Add(this.groupBox1);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
@@ -67,6 +69,109 @@ namespace ToolCrawlData
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(1291, 136);
             this.panel1.TabIndex = 0;
+            // 
+            // btnExportExcel
+            // 
+            this.btnExportExcel.Location = new System.Drawing.Point(1193, 101);
+            this.btnExportExcel.Name = "btnExportExcel";
+            this.btnExportExcel.Size = new System.Drawing.Size(86, 23);
+            this.btnExportExcel.TabIndex = 1;
+            this.btnExportExcel.Text = "Export Excel";
+            this.btnExportExcel.UseVisualStyleBackColor = true;
+            this.btnExportExcel.Click += new System.EventHandler(this.btnExportExcel_Click);
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.btnSearch);
+            this.groupBox1.Controls.Add(this.label4);
+            this.groupBox1.Controls.Add(this.label3);
+            this.groupBox1.Controls.Add(this.label2);
+            this.groupBox1.Controls.Add(this.label1);
+            this.groupBox1.Controls.Add(this.txtzipcode);
+            this.groupBox1.Controls.Add(this.txtlicensenumber);
+            this.groupBox1.Controls.Add(this.txtName);
+            this.groupBox1.Controls.Add(this.txtAddress);
+            this.groupBox1.Location = new System.Drawing.Point(21, 12);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(658, 118);
+            this.groupBox1.TabIndex = 0;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Search ";
+            // 
+            // btnSearch
+            // 
+            this.btnSearch.Location = new System.Drawing.Point(573, 89);
+            this.btnSearch.Name = "btnSearch";
+            this.btnSearch.Size = new System.Drawing.Size(75, 23);
+            this.btnSearch.TabIndex = 8;
+            this.btnSearch.Text = "Search";
+            this.btnSearch.UseVisualStyleBackColor = true;
+            this.btnSearch.Click += new System.EventHandler(this.btnSearch_Click);
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(18, 95);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(47, 13);
+            this.label4.TabIndex = 7;
+            this.label4.Text = "ZipCode";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(18, 69);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(81, 13);
+            this.label3.TabIndex = 6;
+            this.label3.Text = "LicenseNumber";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(18, 43);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(35, 13);
+            this.label2.TabIndex = 5;
+            this.label2.Text = "Name";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(18, 19);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(45, 13);
+            this.label1.TabIndex = 4;
+            this.label1.Text = "Address";
+            // 
+            // txtzipcode
+            // 
+            this.txtzipcode.Location = new System.Drawing.Point(102, 92);
+            this.txtzipcode.Name = "txtzipcode";
+            this.txtzipcode.Size = new System.Drawing.Size(369, 20);
+            this.txtzipcode.TabIndex = 3;
+            this.txtzipcode.TextChanged += new System.EventHandler(this.textBox4_TextChanged);
+            // 
+            // txtlicensenumber
+            // 
+            this.txtlicensenumber.Location = new System.Drawing.Point(102, 66);
+            this.txtlicensenumber.Name = "txtlicensenumber";
+            this.txtlicensenumber.Size = new System.Drawing.Size(369, 20);
+            this.txtlicensenumber.TabIndex = 2;
+            // 
+            // txtName
+            // 
+            this.txtName.Location = new System.Drawing.Point(102, 40);
+            this.txtName.Name = "txtName";
+            this.txtName.Size = new System.Drawing.Size(369, 20);
+            this.txtName.TabIndex = 1;
+            // 
+            // txtAddress
+            // 
+            this.txtAddress.Location = new System.Drawing.Point(102, 16);
+            this.txtAddress.Name = "txtAddress";
+            this.txtAddress.Size = new System.Drawing.Size(369, 20);
+            this.txtAddress.TabIndex = 0;
             // 
             // panel2
             // 
@@ -146,108 +251,15 @@ namespace ToolCrawlData
             this.Remove.Text = "Remove";
             this.Remove.UseColumnTextForButtonValue = true;
             // 
-            // groupBox1
+            // button1
             // 
-            this.groupBox1.Controls.Add(this.btnSearch);
-            this.groupBox1.Controls.Add(this.label4);
-            this.groupBox1.Controls.Add(this.label3);
-            this.groupBox1.Controls.Add(this.label2);
-            this.groupBox1.Controls.Add(this.label1);
-            this.groupBox1.Controls.Add(this.txtzipcode);
-            this.groupBox1.Controls.Add(this.txtlicensenumber);
-            this.groupBox1.Controls.Add(this.txtName);
-            this.groupBox1.Controls.Add(this.txtAddress);
-            this.groupBox1.Location = new System.Drawing.Point(21, 12);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(658, 118);
-            this.groupBox1.TabIndex = 0;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "groupBox1";
-            // 
-            // txtAddress
-            // 
-            this.txtAddress.Location = new System.Drawing.Point(102, 16);
-            this.txtAddress.Name = "txtAddress";
-            this.txtAddress.Size = new System.Drawing.Size(369, 20);
-            this.txtAddress.TabIndex = 0;
-            // 
-            // txtName
-            // 
-            this.txtName.Location = new System.Drawing.Point(102, 40);
-            this.txtName.Name = "txtName";
-            this.txtName.Size = new System.Drawing.Size(369, 20);
-            this.txtName.TabIndex = 1;
-            // 
-            // txtlicensenumber
-            // 
-            this.txtlicensenumber.Location = new System.Drawing.Point(102, 66);
-            this.txtlicensenumber.Name = "txtlicensenumber";
-            this.txtlicensenumber.Size = new System.Drawing.Size(369, 20);
-            this.txtlicensenumber.TabIndex = 2;
-            // 
-            // txtzipcode
-            // 
-            this.txtzipcode.Location = new System.Drawing.Point(102, 92);
-            this.txtzipcode.Name = "txtzipcode";
-            this.txtzipcode.Size = new System.Drawing.Size(369, 20);
-            this.txtzipcode.TabIndex = 3;
-            this.txtzipcode.TextChanged += new System.EventHandler(this.textBox4_TextChanged);
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(18, 19);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(45, 13);
-            this.label1.TabIndex = 4;
-            this.label1.Text = "Address";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(18, 43);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(35, 13);
-            this.label2.TabIndex = 5;
-            this.label2.Text = "Name";
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(18, 69);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(81, 13);
-            this.label3.TabIndex = 6;
-            this.label3.Text = "LicenseNumber";
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(18, 95);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(47, 13);
-            this.label4.TabIndex = 7;
-            this.label4.Text = "ZipCode";
-            // 
-            // btnExportExcel
-            // 
-            this.btnExportExcel.Location = new System.Drawing.Point(1193, 101);
-            this.btnExportExcel.Name = "btnExportExcel";
-            this.btnExportExcel.Size = new System.Drawing.Size(86, 23);
-            this.btnExportExcel.TabIndex = 1;
-            this.btnExportExcel.Text = "Export Excel";
-            this.btnExportExcel.UseVisualStyleBackColor = true;
-            this.btnExportExcel.Click += new System.EventHandler(this.btnExportExcel_Click);
-            // 
-            // btnSearch
-            // 
-            this.btnSearch.Location = new System.Drawing.Point(573, 89);
-            this.btnSearch.Name = "btnSearch";
-            this.btnSearch.Size = new System.Drawing.Size(75, 23);
-            this.btnSearch.TabIndex = 8;
-            this.btnSearch.Text = "Search";
-            this.btnSearch.UseVisualStyleBackColor = true;
-            this.btnSearch.Click += new System.EventHandler(this.btnSearch_Click);
+            this.button1.Location = new System.Drawing.Point(1057, 101);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(116, 23);
+            this.button1.TabIndex = 2;
+            this.button1.Text = "Remove All Data";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // FormHistory
             // 
@@ -260,10 +272,10 @@ namespace ToolCrawlData
             this.Text = "FormHistory";
             this.Load += new System.EventHandler(this.FormHistory_Load);
             this.panel1.ResumeLayout(false);
-            this.panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            this.panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -293,5 +305,6 @@ namespace ToolCrawlData
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Button button1;
     }
 }

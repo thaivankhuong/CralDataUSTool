@@ -137,7 +137,15 @@ namespace ToolCrawlData.Data
             }
             return result;
         }
-
+        public bool RemoveAllData()
+        {
+            string strInsert = string.Format("Delete FROM  tbl_Search ");
+            this.createConection();
+            SQLiteCommand cmd = new SQLiteCommand(strInsert, this._con);
+            cmd.ExecuteNonQuery();
+            this.closeConnection();
+            return true;
+        }
         public bool UpdateData(SearchData data)
         {
             bool flag = this.loadDataByAddress(data.Address).Columns.Count > 0;

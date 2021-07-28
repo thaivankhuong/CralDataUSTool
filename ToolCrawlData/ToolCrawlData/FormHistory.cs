@@ -150,5 +150,17 @@ namespace ToolCrawlData
 				this.Loaddatatable(true);
 			}
 		}
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+			DialogResult dialogResult = MessageBox.Show("Sure", "Accept remove ", MessageBoxButtons.YesNo);
+			bool flag3 = dialogResult == DialogResult.Yes;
+			if (flag3)
+			{
+				this.db.RemoveAllData();
+				this.Loaddatatable();
+
+			}
+		}
     }
 }
